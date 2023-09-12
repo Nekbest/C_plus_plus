@@ -1,4 +1,4 @@
-#include <nahe.h>
+#include <name.h>
 void addToHead(Node*& head, int value){
  Node* newHead = new Node; newHead->value = value;
  newHead->next = head; head = newHead;
