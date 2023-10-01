@@ -146,5 +146,4 @@ Time& Time::operator =(const Time& other_time)
 	*minutes = *other_time.minutes;
 	*seconds = *other_time.seconds;
 	return *this;
-	/*return Time(other_time.in_seconds());*/
 }
