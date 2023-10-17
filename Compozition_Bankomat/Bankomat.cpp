@@ -1,5 +1,4 @@
-#include "Bankomat_header.h"
-#include "Money_header.h"
+#include "Bankomat.h"
 
 
 Bankomat::Bankomat()
