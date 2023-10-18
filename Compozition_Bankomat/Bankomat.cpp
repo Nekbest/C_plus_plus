@@ -14,44 +14,37 @@ Bankomat::Bankomat(int* a)
 }
 
 
-float Bankomat::calculate_amount()
+int Bankomat::calculate_amount()
 {
 	return cash.calculate_amount();
 }
 
 
-float Bankomat::add_money(int* other_money)
+int Bankomat::add_money(int* other_money)
 {
 	for (int i = 0; i < 8; i++)
 		cash.set_denomination_rubles(i, other_money[i]);
-	for (int i = 0; i < 3; i++)
-		cash.set_denomination_pennies(i, other_money[8 + i]);
 
 	return calculate_amount();
 }
 
 
-int* Bankomat::withdraw_money(float money)
+int* Bankomat::withdraw_money(int money)
 {
-	float copy_sum = 0;
-	int* copy_rubles = new int [11];
+	int copy_sum = 0;
+	int* copy_rubles = new int [8];
 	for (int i = 0; i < 8; i++)
 	{
 		copy_sum += cash.get_nominal_rubles(i) * cash.get_denomination_rubles(i);
 		copy_rubles[i] = cash.get_denomination_rubles(i);
 
 	}
-	for (int i = 0; i < 3; i++)
-	{
-		copy_sum += cash.get_nominal_pennies(i) * cash.get_denomination_pennies(i);
-		copy_rubles[8 + i] = cash.get_denomination_rubles(i);
 
-	}
 
-	if (copy_sum < money)
+	if (copy_sum < money || money < 100)
 		return copy_rubles;
 
-	float summ = 0;
+	int summ = 0;
 
 	for (int i = 7; i >= 0; i--)
 	{
@@ -62,27 +55,15 @@ int* Bankomat::withdraw_money(float money)
 		}
 	}
 
-	for (int i = 2; i >= 0; i--)
-	{
-		while (copy_rubles[i] != 0 && summ + cash.get_nominal_pennies(i) <= money)
-		{
-			copy_rubles[8 + i] -= 1;
-			summ += cash.get_nominal_pennies(i);
-		}
-	}
-	if (summ - money < 0.01)
+	if (summ != money)
 	{
 		for (int i = 0; i < 8; i++)
 			cash.set_denomination_rubles(i, -(cash.get_denomination_rubles(i) - copy_rubles[i]));
-		for (int i = 0; i < 3; i++)
-			cash.set_denomination_pennies(i, -(cash.get_denomination_pennies(i) - copy_rubles[8 + i]));
 	}
 	else
 	{
 		for (int i = 0; i < 8; i++)
 			copy_rubles[i] = cash.get_denomination_rubles(i);
-		for (int i = 0; i < 3; i++)
-			copy_rubles[i] = cash.get_denomination_pennies(i);
 	}
 	return copy_rubles;
 }
@@ -97,18 +78,6 @@ int Bankomat::set_denomination_rubles(int index, int meaning)
 int Bankomat::get_denomination_rubles(int index)
 {
 	return cash.get_denomination_rubles(index);
-}
-
-
-int Bankomat::get_denomination_pennies(int index)
-{
-	return cash.get_denomination_pennies(index);
-}
-
-
-int Bankomat::set_denomination_pennies(int index, int meaning)
-{
-	return cash.set_denomination_pennies(index, meaning);
 }
 
 
