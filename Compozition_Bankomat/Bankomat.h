@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include "Money_header.h"
+#include "Money.h"
 
 
 class Bankomat
