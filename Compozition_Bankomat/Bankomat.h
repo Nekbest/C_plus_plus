@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include "Money.h"
+#include "Money_header.h"
 
 
 class Bankomat
@@ -12,13 +12,11 @@ private:
 public:
 	Bankomat();
 	Bankomat(int* a);
-	float calculate_amount();
-	float add_money(int* other_money);
-	int* withdraw_money(float money);
+	int calculate_amount();
+	int add_money(int* other_money);
+	int* withdraw_money(int money);
 	int set_denomination_rubles(int index, int meaning);
 	int get_denomination_rubles(int index);
-	int set_denomination_pennies(int index, int meaning);
-	int get_denomination_pennies(int index);
 	std::string get_atm_id();
 	std::string to_string();
 };
