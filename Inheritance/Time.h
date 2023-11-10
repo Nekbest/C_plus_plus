@@ -8,7 +8,6 @@ class Time: public Triad
 public:
 	Time();
 	Time(int h, int m, int s);
-	Time(Triad& triad);
 	int in_seconds() const;
 	int in_minutes();
 	friend std::ostream& operator <<(std::ostream& out, const Time& time);
