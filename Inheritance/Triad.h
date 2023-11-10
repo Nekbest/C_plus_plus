@@ -1,21 +1,19 @@
 #pragma once
-#include "Triad.h"
 #include <iostream>
 #include <string>
 
-class Time: public Triad
+class Triad
 {
+protected:
+	int value_1, value_2, value_3;
 public:
-	Time();
-	Time(int h, int m, int s);
-	int in_seconds() const;
-	int in_minutes();
-	friend std::ostream& operator <<(std::ostream& out, const Time& time);
-	Time val_1_increase_1();
-	Time val_2_increase_1();
-	Time val_3_increase_1();
-	Time val_2_increase_n(int n);
-	Time val_3_increase_n(int n);
-	void normalized();
-
+	Triad();
+	Triad(int val_1, int val_2, int val_3);
+	Triad val_1_increase_1();
+	Triad val_2_increase_1();
+	Triad val_3_increase_1();
+	int get_value_1();
+	int get_value_2();
+	int get_value_3();
+	friend std::ostream& operator <<(std::ostream& out, const Triad& triad);
 };
