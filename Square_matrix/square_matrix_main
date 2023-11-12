@@ -1,0 +1,50 @@
+#include <iostream>
+#include "Square_matrix.h"
+
+int main()
+{
+	double** matrix_1 = new double* [3];
+	for (int i = 0; i < 3; i++)
+		matrix_1[i] = new double[3];
+	matrix_1[0][0] = 1;
+	matrix_1[0][1] = 5;
+	matrix_1[0][2] = 4;
+	matrix_1[1][0] = 0;
+	matrix_1[1][1] = -1;
+	matrix_1[1][2] = 2;
+	matrix_1[2][0] = 7;
+	matrix_1[2][1] = 5;
+	matrix_1[2][2] = 6;
+	int dim_1 = 3;
+	Square_matrix square_matrix_1(dim_1, matrix_1);
+	std::cout << square_matrix_1;
+	std::cout << "__________________\n";
+	double** matrix_2 = new double* [3];
+	for (int i = 0; i < 3; i++)
+		matrix_2[i] = new double[3];
+	matrix_2[0][0] = 1;
+	matrix_2[0][1] = 2;
+	matrix_2[0][2] = 3;
+	matrix_2[1][0] = 1;
+	matrix_2[1][1] = 0;
+	matrix_2[1][2] = 5;
+	matrix_2[2][0] = 7;
+	matrix_2[2][1] = 4;
+	matrix_2[2][2] = 2;
+	int dim_2 = 3;
+	Square_matrix square_matrix_2(dim_2, matrix_2);
+	std::cout << square_matrix_2;
+	std::cout << "__________________\n";
+	Square_matrix square_matrix_3(dim_2);
+	square_matrix_3 = square_matrix_1 + square_matrix_2;
+	std::cout << square_matrix_3;
+	std::cout << "__________________\n";
+	square_matrix_3 = square_matrix_1 - square_matrix_2;
+	std::cout << square_matrix_3;
+	std::cout << "__________________\n";
+	square_matrix_3 = square_matrix_1 * square_matrix_2;
+	std::cout << square_matrix_3;
+	std::cout << "__________________\n";
+	return 0;
+
+}
