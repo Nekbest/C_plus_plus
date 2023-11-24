@@ -9,6 +9,7 @@ private:
 		Tvalue element;
 		Node* next = nullptr;
 		Node* previos = nullptr;
+		int index;
 	};
 	Node* head;
 	Node* tail;
@@ -36,18 +37,25 @@ public:
 		newhead->element = value;
 		newhead->previos = nullptr;
 		newhead->next = head;
+		newhead->index = 0;
 		if (IsEmpty())
 			head = tail = newhead;
 		else
 		{
 			head->previos = newhead;
 			head = newhead;
+			Node* current = head->next;
+			while (current != nullptr)
+			{
+				current->index = current->index + 1;
+				current = current->next;
+			}
 		}
 		newhead = nullptr;
 		delete newhead;
 	}
 
-	void DeleteHead()
+	Node* DeleteHead()
 	{
 		if (!IsEmpty())
 		{
@@ -56,6 +64,13 @@ public:
 			head->previos = nullptr;
 			delete ptr;
 		}
+		Node* current = tail;
+		while (current != nullptr)
+		{
+			current->index -= 1;
+			current = current->previos;
+		}
+		return head;
 	}
 
 
@@ -70,42 +85,46 @@ public:
 		}
 	}
 
-	void DeleteValue(Tvalue value)
+	void DeleteValue(int* index_massive, int n)
 	{
+		if (!IsEmpty())
+			for (int i = 0; i < n; i++)
+				if (index_massive[i] <= tail->index)
+					DeleteValue(index_massive[i]);
+	}
 
+	void DeleteValue(int index)
+	{
 		if (!IsEmpty())
 		{
 			Node* current = head;
-			while (current != nullptr && value != current->element)
+			while (current != nullptr && current->index != index)
 				current = current->next;
-			if (current != nullptr && current->element == value)
+			if (current->index == 0)
+				current = DeleteHead();
+			else if (current->index == tail->index)
+				DeleteTail();
+			else
 			{
-				if (current == head)
+				Node* ptr = current;
+				current = current->next;
+				current->previos = ptr->previos;
+				current = current->previos;
+				current->next = ptr->next;
+				current = current->next;
+				delete ptr;
+				Node* index_update = tail;
+				while (index_update->index != index - 1)
 				{
-					DeleteHead();
+					index_update->index -= 1;
+					index_update = index_update->previos;
 				}
-				else if (current == tail)
-					DeleteTail();
-				else
-				{
-					Node* ptr = current;
-					current = current->next;
-					current->previos = ptr->previos;
-					current = current->previos;
-					current->next = ptr->next;
-					delete ptr;
-				}
+				index_update = nullptr;
+				delete index_update;
 			}
 			current = nullptr;
 			delete current;
 		}
-	}
-
-	void DeleteValue(Tvalue* mas_value, int n)
-	{
-		if (!IsEmpty())
-			for (int i = 0; i < n; i++)
-				DeleteValue(mas_value[i]);
 	}
 
 	void AddHead(Tvalue* mas_value, int n)
@@ -130,6 +149,7 @@ public:
 			newtail->previos = tail;
 			tail->next = newtail;
 			tail = tail->next;
+			tail->index = tail->previos->index + 1;
 			newtail = nullptr;
 			delete newtail;
 		}
@@ -153,7 +173,7 @@ public:
 		{
 			while (current != nullptr)
 			{
-				out << current->element << "\n";
+				out << current->element << " " << current->index << "\n";
 				current = current->next;
 			}
 		}
@@ -181,24 +201,51 @@ public:
 			delete tail;
 		}
 	}
-	void ChangeValue(Tvalue* mas_val, Tvalue* mas_new_val, int n)
+	void ChangeValue(int* index_massive, Tvalue* mas_new_val, int n)
 	{
 		if (!IsEmpty())
 			for (int i = 0; i < n; i++)
-				ChangeValue(mas_val[i], mas_new_val[i]);
+				if(index_massive[i] <= tail->index)
+					ChangeValue(index_massive[i], mas_new_val[i]);
 	}
-	void ChangeValue(Tvalue value, Tvalue newvalue)
+
+	void ChangeValue(int index, Tvalue newvalue)
 	{
 		if (!IsEmpty())
 		{
 			Node* current = head;
-			while (current != nullptr && current->element != value)
+			while (current != nullptr && current->index != index)
 				current = current->next;
-			if (current->element == value)
+			if (current->index == index)
 				current->element = newvalue;
 			current = nullptr;
 			delete current;
 			}
 		}
+
+	Tvalue* SearchValue(int* index_massive, int n)
+	{
+		Tvalue* search_value = new Tvalue[n];
+		if (!IsEmpty())
+			for (int i = 0; i < n; i++)
+				if (index_massive[i] <= tail->index)
+					search_value[i] = SearchValue(index_massive[i]);
+		return search_value;
+	}
+
+	Tvalue SearchValue(int index)
+	{
+		if (!IsEmpty())
+		{
+			Node* current = head;
+			while (current != nullptr && current->index != index)
+				current = current->next;
+			if (current != nullptr)
+				return current->element;
+			current = nullptr;
+			delete current;
+		}
+		return 0;
+	}
 
 };
