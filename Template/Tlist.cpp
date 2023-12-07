@@ -88,41 +88,56 @@ public:
 	void DeleteValue(int* index_massive, int n)
 	{
 		if (!IsEmpty())
+		{
+			int index_now;
 			for (int i = 0; i < n; i++)
-				if (index_massive[i] <= tail->index)
-					DeleteValue(index_massive[i]);
-	}
+			{
+				index_now = index_massive[i];
+				Node* current = head;
+				while (index_now > -1 && index_now <= tail->index && current->index != index_now)
+					current = current->next;
+				if (index_now > -1 && index_now <= tail->index)
+				{
+					if (current == head)
+					{
+						Node* ptr = head;
+						head = head->next;
+						head->previos = nullptr;
+						delete ptr;
+					}
+					else if (current == tail)
+					{
+						Node* ptr = tail;
+						tail = tail->previos;
+						tail->next = nullptr;
+						delete ptr;
+					}
+					else
+					{
+						Node* ptr = current;
+						current = current->next;
+						current->previos = ptr->previos;
+						current = current->previos;
+						current->next = ptr->next;
+						delete ptr;
+						current = nullptr;
+						delete current;
+					}
+				}
+			}
+		}
 
-	void DeleteValue(int index)
-	{
 		if (!IsEmpty())
 		{
 			Node* current = head;
-			while (current != nullptr && current->index != index)
-				current = current->next;
-			if (current->index == 0)
-				current = DeleteHead();
-			else if (current->index == tail->index)
-				DeleteTail();
-			else
+			int counter = 0;
+			while (current != nullptr)
 			{
-				Node* ptr = current;
+
+				current->index = counter;
+				counter += 1;
 				current = current->next;
-				current->previos = ptr->previos;
-				current = current->previos;
-				current->next = ptr->next;
-				current = current->next;
-				delete ptr;
-				Node* index_update = tail;
-				while (index_update->index != index - 1)
-				{
-					index_update->index -= 1;
-					index_update = index_update->previos;
-				}
-				index_update = nullptr;
-				delete index_update;
 			}
-			current = nullptr;
 			delete current;
 		}
 	}
@@ -170,13 +185,11 @@ public:
 	{
 		Node* current = list.GetHead();
 		if (!(list.IsEmpty()))
-		{
 			while (current != nullptr)
 			{
 				out << current->element << " " << current->index << "\n";
 				current = current->next;
 			}
-		}
 		else
 			out << "nullptr";
 		current = nullptr;
@@ -201,51 +214,42 @@ public:
 			delete tail;
 		}
 	}
+
 	void ChangeValue(int* index_massive, Tvalue* mas_new_val, int n)
 	{
 		if (!IsEmpty())
 			for (int i = 0; i < n; i++)
-				if(index_massive[i] <= tail->index)
-					ChangeValue(index_massive[i], mas_new_val[i]);
+				if (index_massive[i] <= tail->index)
+				{
+					Node* current = head;
+					while (current != nullptr && current->index != index_massive[i])
+						current = current->next;
+					if (current->index == index_massive[i])
+						current->element = mas_new_val[i];
+					current = nullptr;
+					delete current;
+				}
 	}
-
-	void ChangeValue(int index, Tvalue newvalue)
-	{
-		if (!IsEmpty())
-		{
-			Node* current = head;
-			while (current != nullptr && current->index != index)
-				current = current->next;
-			if (current->index == index)
-				current->element = newvalue;
-			current = nullptr;
-			delete current;
-			}
-		}
 
 	Tvalue* SearchValue(int* index_massive, int n)
 	{
 		Tvalue* search_value = new Tvalue[n];
 		if (!IsEmpty())
-			for (int i = 0; i < n; i++)
-				if (index_massive[i] <= tail->index)
-					search_value[i] = SearchValue(index_massive[i]);
-		return search_value;
-	}
-
-	Tvalue SearchValue(int index)
-	{
-		if (!IsEmpty())
 		{
-			Node* current = head;
-			while (current != nullptr && current->index != index)
-				current = current->next;
-			if (current != nullptr)
-				return current->element;
-			current = nullptr;
-			delete current;
+			if (!IsEmpty())
+				for (int i = 0; i < n; i++)
+					if (index_massive[i] <= tail->index && index_massive[i] > -1)
+					{
+						Node* current = head;
+						while (current != nullptr && current->index != index_massive[i])
+							current = current->next;
+						if (current != nullptr)
+							search_value[i] = current->element;
+						current = nullptr;
+						delete current;
+					}
 		}
-		return 0;
+		return search_value;
 	}
 
 };
